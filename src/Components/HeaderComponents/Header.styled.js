@@ -2,42 +2,78 @@ import styled from "@emotion/styled";
 import { NavLink } from "react-router-dom";
 
 const HeaderWrapper = styled.header`
-  /* position: fixed;
-  top: 0;
-  right: 0;
-  width: 100%; */
   background-color: #1a1919;
 `;
 
 const Navigation = styled.nav`
+  display: flex;
+  justify-content: center;
   height: 64px;
   margin: 0 auto;
 `;
 
 const List = styled.ul`
-  display: flex;
+  display: inline-flex;
   justify-content: center;
   align-items: center;
-  gap: 24px;
+  gap: 60px;
   height: 100%;
   margin: 0;
 `;
 
-const ListItem = styled.li``;
+const ListItem = styled.li`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 178px;
+  height: 48px;
+
+  cursor: pointer;
+
+  &:hover a {
+    scale: 1.1;
+    border: 1px solid white;
+    padding: 12px 50px;
+  }
+
+  &:active a {
+    scale: 1.05;
+  }
+`;
 
 const StyledNavLink = styled(NavLink)`
   display: inline-flex;
-  padding: 12px 50px;
   justify-content: center;
   align-items: center;
   color: #fff;
   background-color: transparent;
   border-radius: 12px;
-  transition: background-color 300ms ease-in-out;
+  border: 1px solid transparent;
+  transition: scale 100ms ease-in-out, border 100ms ease-in-out,
+    padding 150ms ease-in-out;
+`;
+
+const StyledLogo = styled(NavLink)`
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  display: inline-flex;
+  padding: 12px 50px;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  color: #fff;
+  transition: scale 50ms ease-in-out;
 
   &:hover {
-    background-color: #0b44cd;
+    scale: 1.1;
+  }
+
+  &:active {
+    scale: 1.05;
   }
 `;
 
-export { HeaderWrapper, Navigation, List, ListItem, StyledNavLink };
+export { HeaderWrapper, Navigation, List, ListItem, StyledNavLink, StyledLogo };
