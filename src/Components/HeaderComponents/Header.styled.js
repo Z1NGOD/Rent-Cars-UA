@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import { NavLink } from "react-router-dom";
 
 const HeaderWrapper = styled.header`
-  background-color: #1a1919;
+  background-color: #0b44cd;
 `;
 
 const Navigation = styled.nav`
@@ -10,6 +10,7 @@ const Navigation = styled.nav`
   justify-content: center;
   height: 64px;
   margin: 0 auto;
+  font-size: 18px;
 `;
 
 const List = styled.ul`

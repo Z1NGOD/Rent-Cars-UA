@@ -7,4 +7,5 @@ export const Button = styled.button`
   border-radius: 12px;
   color: #fff;
   background-color: #0b44cd;
+  border: none;
 `;
