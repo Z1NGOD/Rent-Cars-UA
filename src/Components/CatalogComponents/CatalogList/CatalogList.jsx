@@ -1,4 +1,7 @@
 import icons from "../../../images/icons.svg";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { nanoid } from "nanoid";
 import {
   List,
   ListItem,
@@ -10,79 +13,73 @@ import {
   TitleSpan,
   TagsList,
   Tag,
-} from "../Catalog.styled";
+} from "../../UI/ComponentList.styled.js";
 import { Button } from "../../UI/Button.styed";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
 import { getCatalogFetch } from "../../../Redux/catalogSlice";
-import { nanoid } from "nanoid";
+import { addFavorite, removeFavorite } from "../../../Redux/favoritesSlice";
 import Loader from "../../UI/Loader";
+import handleIsFavorite from "../../../Helpers/handleIsFavorite";
 
 const CatalogList = () => {
-  const catalog = useSelector((state) => state.catalog.catalog);
-  const isLoading = useSelector((state) => state.catalog.loading);
+  const { catalog, loading } = useSelector((state) => state.catalog);
+  const favorites = useSelector((state) => state.favorites.favorites);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getCatalogFetch());
   }, [dispatch]);
 
-  return (
-    <>
-      <List>
-        {isLoading ? (
-          <Loader />
-        ) : (
-          catalog.map(
-            ({
-              id,
-              year,
-              make,
-              model,
-              type,
-              img,
-              accessories,
-              functionalities,
-              rentalPrice,
-              rentalCompany,
-              address,
-            }) => (
-              <ListItem key={nanoid()} id={id}>
-                <Image src={img} />
-                <FavoriteBtn type="submit">
-                  <FavoriteIcon width={18} height={18}>
-                    <use href={icons + "#heart"} />
-                  </FavoriteIcon>
-                </FavoriteBtn>
-                <TitleContainer>
-                  <Title>
-                    {make} <TitleSpan>{model}</TitleSpan>, {year}
-                  </Title>
-                  <Title>{rentalPrice}</Title>
-                </TitleContainer>
+  const handleFavoriteClick = (item) => {
+    const isFavorite = handleIsFavorite(favorites, item);
+    isFavorite ? dispatch(removeFavorite(item)) : dispatch(addFavorite(item));
+  };
 
-                <TagsList>
-                  <Tag>
-                    {[
-                      address.split(",").splice(1, 2).join(" | "),
-                      rentalCompany,
-                      accessories[2],
-                      type,
-                      model,
-                      id,
-                      functionalities[0],
-                    ]
-                      .filter((tag) => !!tag)
-                      .join(" | ")}
-                  </Tag>
-                </TagsList>
-                <Button>Learn more</Button>
-              </ListItem>
-            )
-          )
-        )}
-      </List>
-    </>
+  return (
+    <List>
+      {loading ? (
+        <Loader />
+      ) : (
+        catalog.map((item) => (
+          <ListItem key={nanoid()} id={item.id}>
+            <Image src={item.img} />
+            <FavoriteBtn
+              type="button"
+              onClick={() => handleFavoriteClick(item)}
+            >
+              <FavoriteIcon
+                isFavorite={handleIsFavorite(favorites, item)}
+                width={18}
+                height={18}
+              >
+                <use href={icons + "#heart"} />
+              </FavoriteIcon>
+            </FavoriteBtn>
+            <TitleContainer>
+              <Title>
+                {item.make} <TitleSpan>{item.model}</TitleSpan>, {item.year}
+              </Title>
+              <Title>{item.rentalPrice}</Title>
+            </TitleContainer>
+            <TagsList>
+              <Tag>
+                {[
+                  item.address.split(",").splice(1, 2).join(" | "),
+                  item.rentalCompany,
+                  item.accessories[2],
+                  item.type,
+                  item.model,
+                  item.id,
+                  item.functionalities[0],
+                ]
+                  .filter((tag) => !!tag)
+                  .join(" | ")}
+              </Tag>
+            </TagsList>
+            <Button>Learn more</Button>
+          </ListItem>
+        ))
+      )}
+    </List>
   );
 };
 

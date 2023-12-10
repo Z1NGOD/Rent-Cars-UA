@@ -1,4 +1,4 @@
-import CatalogFilters from "./catalogFilters/catalogFilters";
+import CatalogFilters from "./Filters/Filters";
 import CatalogList from "./catalogList/catalogList";
 
 const Catalog = () => {

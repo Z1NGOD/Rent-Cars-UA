@@ -6,7 +6,7 @@ import {
   SelectContainer,
   Select,
   Option,
-} from "../Catalog.styled";
+} from "./Filters.styled";
 import { Button } from "../../UI/Button.styed";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
