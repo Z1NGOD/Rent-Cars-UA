@@ -43,26 +43,30 @@ const Select = styled.select`
   background: #f7f7fb;
   border: none;
 `;
-const Option = styled.option`
-`;
+const Option = styled.option``;
 
 const List = styled.ul`
   display: flex;
   justify-content: center;
-  align-items: center;
-  flex-direction: column;
+  align-items: stretch;
   flex-wrap: wrap;
+  row-gap: 54px;
+  column-gap: 24px;
+  margin-top: 50px;
 `;
 const ListItem = styled.li`
   display: flex;
-  justify-content: center;
-  align-items: center;
   flex-direction: column;
-  width: calc((100% - 3 * 38px) / 4);
+  width: calc((100% - 3 * 24px) / 4);
+  max-width: 274px;
   border-radius: 14px;
+  align-self: stretch;
+  flex-grow: 1;
 `;
 const Image = styled.img`
+  height: 268px;
   border-radius: 14px;
+  margin-bottom: 14px;
 `;
 const Title = styled.h3`
   color: #121417;
@@ -70,8 +74,15 @@ const Title = styled.h3`
   font-weight: 500;
   line-height: 24px;
 `;
+const TitleContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
 const TitleSpan = styled.span`
   color: #3470ff;
+`;
+const TagsList = styled.ul`
+  margin-bottom: 28px;
 `;
 const Tag = styled.p`
   color: rgba(18, 20, 23, 0.5);
@@ -87,7 +98,9 @@ export {
   List,
   ListItem,
   Image,
+  TitleContainer,
   Title,
   TitleSpan,
+  TagsList,
   Tag,
 };

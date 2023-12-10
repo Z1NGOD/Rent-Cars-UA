@@ -6,7 +6,7 @@ function* workGetCatalogFetch() {
     const catalog = yield call(() =>
       axios.get("https://6574de3ab2fbb8f6509cbc8a.mockapi.io/api/v1/catalog")
     );
-      const catalogData = catalog.data;
+    const catalogData = catalog.data;
     yield put(getCatalogSuccess(catalogData));
   } catch (error) {
     getCatalogFailure(error.message);
