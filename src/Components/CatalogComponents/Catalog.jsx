@@ -16,6 +16,7 @@ import { Button } from "../UI/Button.styed";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getCatalogFetch } from "../../Redux/catalogSlice";
+import { nanoid } from "nanoid";
 const Catalog = () => {
   const catalog = useSelector((state) => state.catalog.catalog);
   const dispatch = useDispatch();
@@ -43,14 +44,14 @@ const Catalog = () => {
       </Form>
 
       <List>
-        {catalog.map(({ id, model, type, img, accessories }) => (
-          <ListItem key={id}>
+        {catalog.map(({  model, type, img, accessories }) => (
+          <ListItem key={nanoid()}>
             <Image href={img} />
             <Title>
               {model}
               <TitleSpan>{type}</TitleSpan>
               {accessories.map((accessory) => (
-                <Tag key={accessory}>{accessory}</Tag>
+                <Tag key={nanoid()}>{accessory}</Tag>
               ))}
             </Title>
           </ListItem>
