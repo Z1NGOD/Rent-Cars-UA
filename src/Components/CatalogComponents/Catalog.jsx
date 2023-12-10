@@ -63,7 +63,7 @@ const Catalog = () => {
           <RightInput borderSide={false} placeholder="To" />
         </div>
 
-        <Button style={{ margin: "0", padding: "14px 44px" }}>Search</Button>
+        <Button style={{ padding: "16px 44px" }}>Search</Button>
       </Form>
 
       <List>
@@ -71,7 +71,19 @@ const Catalog = () => {
           <Loader />
         ) : (
           catalog.map(
-            ({ id, year, make, model, type, img, accessories, functionalities, rentalPrice, rentalCompany, address }) => (
+            ({
+              id,
+              year,
+              make,
+              model,
+              type,
+              img,
+              accessories,
+              functionalities,
+              rentalPrice,
+              rentalCompany,
+              address,
+            }) => (
               <ListItem key={nanoid()} id={id}>
                 <Image src={img} />
                 <FavoriteBtn type="submit">

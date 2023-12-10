@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 const Form = styled.form`
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
   gap: 34px;
 `;
 
