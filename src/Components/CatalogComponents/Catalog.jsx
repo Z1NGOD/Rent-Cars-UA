@@ -13,7 +13,15 @@ import {
   Tag,
 } from "./Catalog.styled";
 import { Button } from "../UI/Button.styed";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { getCatalogFetch } from "../../Redux/catalogSlice";
 const Catalog = () => {
+  const catalog = useSelector((state) => state.catalog.catalog);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getCatalogFetch());
+  }, [dispatch]);
   return (
     <>
       <Form>
@@ -35,14 +43,18 @@ const Catalog = () => {
       </Form>
 
       <List>
-        <ListItem>
-          <Image />
-          <Title>
-            jopa
-            <TitleSpan>moja</TitleSpan>
-            <Tag>TAg</Tag>
-          </Title>
-        </ListItem>
+        {catalog.map(({ id, model, type, img, accessories }) => (
+          <ListItem key={id}>
+            <Image href={img} />
+            <Title>
+              {model}
+              <TitleSpan>{type}</TitleSpan>
+              {accessories.map((accessory) => (
+                <Tag key={accessory}>{accessory}</Tag>
+              ))}
+            </Title>
+          </ListItem>
+        ))}
       </List>
     </>
   );

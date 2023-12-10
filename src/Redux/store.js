@@ -1,5 +1,17 @@
 import { configureStore } from "@reduxjs/toolkit";
-import actionsReducer from './ActionsSlice'
+import catalogSlice from "./catalogSlice";
+import favoritesSlice from "./favoritesSlice";
+import createSagaMiddleware from "redux-saga";
+import rootSaga from "./sagas/rootSaga";
+
+const saga = createSagaMiddleware();
 export const store = configureStore({
-    reducer: actionsReducer,
-})
+  reducer: {
+    catalog: catalogSlice,
+    favorites: favoritesSlice,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat([saga]),
+});
+
+saga.run(rootSaga);
