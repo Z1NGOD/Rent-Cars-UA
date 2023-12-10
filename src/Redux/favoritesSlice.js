@@ -1,32 +1,49 @@
 import { createSlice } from "@reduxjs/toolkit";
+
 const initialState = {
   favorites: [],
   loading: false,
   error: "",
 };
+
 const favoritesSlice = createSlice({
   name: "favorites",
   initialState,
   reducers: {
-    getFavoriteFetch: (state) => (state.loading = true),
-    getFavoritesSuccess: (state, action) => (
-      (state.favorites = action.payload), (state.loading = false)
-    ),
-    addFavorite: (state) => (state.loading = true),
-    removeFavorite: (state) => (state.loading = true),
-    favoritesSuccess: (state) => (state.loading = false),
-    favoritesFailure: (state, action) => (
-      (state.loading = false), (state.error = action.payload)
-    ),
+    addFavoriteRequest: (state) => {
+      state.loading = true;
+    },
+    addFavoriteSuccess: (state, action) => {
+      state.loading = false;
+      state.favorites.push(action.payload);
+    },
+    addFavoriteFailure: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+    removeFavoriteRequest: (state) => {
+      state.loading = true;
+    },
+    removeFavoriteSuccess: (state, action) => {
+      state.loading = false;
+      state.favorites = state.favorites.filter(
+        (item) => item.id !== action.payload.id
+      );
+    },
+    removeFavoriteFailure: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
   },
 });
 
 export const {
-  getFavoriteFetch,
-  getFavoritesSuccess,
-  addFavorite,
-  removeFavorite,
-  favoritesSuccess,
-  favoritesFailure,
+  addFavoriteRequest,
+  addFavoriteSuccess,
+  addFavoriteFailure,
+  removeFavoriteRequest,
+  removeFavoriteSuccess,
+  removeFavoriteFailure,
 } = favoritesSlice.actions;
+
 export default favoritesSlice.reducer;

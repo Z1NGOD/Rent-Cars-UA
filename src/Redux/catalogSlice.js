@@ -16,7 +16,7 @@ const catalogSlice = createSlice({
     getCatalogSuccess: (state, action) => {
       state.catalog = action.payload;
       state.loading = false;
-      state.error = ""; // Clear error on success
+      state.error = ""; 
     },
     getCatalogFailure: (state, action) => {
       state.loading = false;
