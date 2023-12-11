@@ -12,8 +12,6 @@ import {
 import catalogSlice from "./catalogSlice";
 import favoritesSlice from "./favoritesSlice";
 import filtersSlice from "./filtersSlice";
-import createSagaMiddleware from "redux-saga";
-import rootSaga from "./sagas/rootSaga";
 import storage from "redux-persist/lib/storage";
 
 const persistConfig = {
@@ -22,7 +20,6 @@ const persistConfig = {
   whitelist: ["favorites"],
 };
 
-const saga = createSagaMiddleware();
 
 export const store = configureStore({
   reducer: {
@@ -35,7 +32,6 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat([saga]),
+    }).concat(),
 });
 export const persistor = persistStore(store);
-saga.run(rootSaga);

@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 
-const FormContainer = styled.div`
+const FormContainer = styled.form`
   display: flex;
   align-items: flex-end;
   gap: 18px;
@@ -147,7 +147,7 @@ const SelectOptionsItem = styled.li`
   }
 `;
 
-const FormWrapper = styled.form`
+const FormWrapper = styled.div`
   position: relative;
   display: flex;
 

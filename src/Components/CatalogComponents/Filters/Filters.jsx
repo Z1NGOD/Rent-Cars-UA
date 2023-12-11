@@ -1,9 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getFiltersFetch } from "../../../Redux/filtersSlice";
+import { fetchFilters } from "../../../Redux/filtersSlice";
 import { nanoid } from "nanoid";
 import icons from "../../../images/icons.svg";
-
 import {
   FormContainer,
   FormElementContainer,
@@ -19,6 +18,7 @@ import {
   InputElement,
   FormSubmitBtn,
 } from "./Filters.styled";
+import { useSearchParams } from "react-router-dom";
 
 const prices = [30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160];
 
@@ -29,23 +29,30 @@ const CatalogFilters = () => {
   const [isPriceDropDownOpen, setIsPriceDropDownOpen] = useState(false);
   const [formFromText, setFormFromText] = useState("");
   const [formToText, setFormToText] = useState("");
-
+  const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useDispatch();
-  const filters = useSelector((state) => state.filters.filters);
-  const isLoading = useSelector((state) => state.filters.loading);
+  const { filters, loading: isLoading } = useSelector((state) => state.filters);
 
   const dropdownRef = useRef(null);
   useEffect(() => {
-    dispatch(getFiltersFetch());
+    dispatch(fetchFilters());
 
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target) && !selectButton.contains(event.target)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target) &&
+        !selectButton.contains(event.target)
+      ) {
         setIsBrandDropDownOpen(false);
       }
     };
 
     const handleClickOutside2 = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target) && !selectButton2.contains(event.target)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target) &&
+        !selectButton2.contains(event.target)
+      ) {
         setIsPriceDropDownOpen(false);
       }
     };
@@ -69,12 +76,32 @@ const CatalogFilters = () => {
     }
   };
 
+  const buildSearchParams = () => {
+    const searchParams = {};
+
+    if (brandValue) {
+      searchParams.make = brandValue;
+    }
+
+    if (priceValue) {
+      searchParams.rentalPrice = priceValue;
+    }
+
+    if (formFromText && formToText) {
+      searchParams.mileageFrom = formFromText;
+      searchParams.mileageTo = formToText;
+    }
+
+    return new URLSearchParams(searchParams).toString();
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (formFromText.trim() === "" || formToText.trim() === "") {
-      return;
-    }
+    const newSearchParams = buildSearchParams();
+
+    // Set the new search params directly
+    setSearchParams(newSearchParams);
 
     setBrandValue(null);
     setPriceValue(null);
@@ -87,7 +114,7 @@ const CatalogFilters = () => {
       {isLoading ? (
         <></>
       ) : (
-        <FormContainer>
+        <FormContainer onSubmit={handleSubmit}>
           <FormElementContainer selectType={"brand"}>
             <SelectBtnTitle>Car brand</SelectBtnTitle>
             <SelectBtn
@@ -97,14 +124,23 @@ const CatalogFilters = () => {
               }}
               selectType={"brand"}
             >
-              <SelectBtnText>{brandValue ? brandValue : "Enter the text"}</SelectBtnText>
-              <SelectBtnIcon width={20} height={20} isBrandDropDownOpen={isBrandDropDownOpen}>
+              <SelectBtnText>
+                {brandValue ? brandValue : "Enter the text"}
+              </SelectBtnText>
+              <SelectBtnIcon
+                width={20}
+                height={20}
+                isBrandDropDownOpen={isBrandDropDownOpen}
+              >
                 <use href={icons + "#arrowDown"} />
               </SelectBtnIcon>
             </SelectBtn>
 
             <SelectContent ref={dropdownRef} selectType={"brand"}>
-              <SelectOptions isBrandDropDownOpen={isBrandDropDownOpen} selectType={"brand"}>
+              <SelectOptions
+                isBrandDropDownOpen={isBrandDropDownOpen}
+                selectType={"brand"}
+              >
                 {filters.map((filter) => (
                   <SelectOptionsItem
                     key={nanoid()}
@@ -130,14 +166,23 @@ const CatalogFilters = () => {
               }}
               selectType={"price"}
             >
-              <SelectBtnText>{`To ${priceValue ? priceValue : ""}$`}</SelectBtnText>
-              <SelectBtnIcon width={20} height={20} isBrandDropDownOpen={isPriceDropDownOpen}>
+              <SelectBtnText>{`To ${
+                priceValue ? priceValue : ""
+              }$`}</SelectBtnText>
+              <SelectBtnIcon
+                width={20}
+                height={20}
+                isBrandDropDownOpen={isPriceDropDownOpen}
+              >
                 <use href={icons + "#arrowDown"} />
               </SelectBtnIcon>
             </SelectBtn>
 
             <SelectContent ref={dropdownRef} selectType={"price"}>
-              <SelectOptions isBrandDropDownOpen={isPriceDropDownOpen} selectType={"price"}>
+              <SelectOptions
+                isBrandDropDownOpen={isPriceDropDownOpen}
+                selectType={"price"}
+              >
                 {prices.map((price) => (
                   <SelectOptionsItem
                     key={nanoid()}
@@ -156,7 +201,7 @@ const CatalogFilters = () => {
 
           <FormElementContainer selectType={"input"}>
             <SelectBtnTitle>Сar mileage / km</SelectBtnTitle>
-            <FormWrapper onSubmit={handleSubmit}>
+            <FormWrapper>
               <InputText>To</InputText>
               <InputText>From</InputText>
               <InputElement
@@ -165,7 +210,12 @@ const CatalogFilters = () => {
                 value={formFromText}
                 onChange={handleInputChange}
               ></InputElement>
-              <InputElement type="number" name="formToText" value={formToText} onChange={handleInputChange}></InputElement>
+              <InputElement
+                type="number"
+                name="formToText"
+                value={formToText}
+                onChange={handleInputChange}
+              ></InputElement>
               <FormSubmitBtn type="submit">Search</FormSubmitBtn>
             </FormWrapper>
           </FormElementContainer>

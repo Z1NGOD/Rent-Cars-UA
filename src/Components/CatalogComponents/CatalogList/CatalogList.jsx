@@ -1,5 +1,5 @@
 import icons from "../../../images/icons.svg";
-import { useEffect } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { nanoid } from "nanoid";
 import {
@@ -15,18 +15,20 @@ import {
   Tag,
 } from "../../UI/ComponentList.styled.js";
 import { Button } from "../../UI/Button.styed";
-import { getCatalogFetch } from "../../../Redux/catalogSlice";
+import { fetchCatalog } from "../../../Redux/catalogSlice";
 import { addFavorite, removeFavorite } from "../../../Redux/favoritesSlice";
 import Loader from "../../UI/Loader";
 import handleIsFavorite from "../../../Helpers/handleIsFavorite";
+import { useSearchParams } from "react-router-dom";
 
 const CatalogList = () => {
-  const { catalog, loading } = useSelector((state) => state.catalog);
+  const { catalog, loading, error } = useSelector((state) => state.catalog);
   const favorites = useSelector((state) => state.favorites.favorites);
   const dispatch = useDispatch();
+  const params = useSearchParams();
 
   useEffect(() => {
-    dispatch(getCatalogFetch());
+    dispatch(fetchCatalog(params));
   }, [dispatch]);
 
   const handleFavoriteClick = (item) => {
@@ -36,6 +38,7 @@ const CatalogList = () => {
 
   return (
     <List>
+      {error && <div>{error}</div>}
       {loading ? (
         <Loader />
       ) : (

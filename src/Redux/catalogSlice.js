@@ -1,30 +1,75 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
 
-const initialState = {
-  catalog: [],
-  loading: false,
-  error: "",
-};
+export const fetchCatalog = createAsyncThunk(
+  "catalog/fetchCatalog",
+  async (params, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `https://6574de3ab2fbb8f6509cbc8a.mockapi.io/api/v1/catalog?${params}`
+      );
+      if (!response.data.length) {
+        throw new Error("No matches found");
+      }
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+export const fetchCatalogOne = createAsyncThunk(
+  "catalog/fetchCatalogOne",
+  async (params, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `https://6574de3ab2fbb8f6509cbc8a.mockapi.io/api/v1/catalog?id=${params}`
+      );
+      if (!response.data.length) {
+        throw new Error("No matches found");
+      }
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
 const catalogSlice = createSlice({
   name: "catalog",
-  initialState,
-  reducers: {
-    getCatalogFetch: (state) => {
-      state.loading = true;
-    },
-    getCatalogSuccess: (state, action) => {
-      state.catalog = action.payload;
-      state.loading = false;
-      state.error = ""; 
-    },
-    getCatalogFailure: (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-    },
+  initialState: {
+    catalog: [],
+    catalogOne: {},
+    loading: false,
+    error: "",
+  },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchCatalog.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchCatalog.fulfilled, (state, action) => {
+        state.catalog = action.payload;
+        state.loading = false;
+        state.error = "";
+      })
+      .addCase(fetchCatalog.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(fetchCatalogOne.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchCatalogOne.fulfilled, (state, action) => {
+        state.catalogOne = action.payload;
+        state.loading = false;
+        state.error = "";
+      })
+      .addCase(fetchCatalogOne.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
   },
 });
 
-export const { getCatalogFetch, getCatalogSuccess, getCatalogFailure } =
-  catalogSlice.actions;
 export default catalogSlice.reducer;
