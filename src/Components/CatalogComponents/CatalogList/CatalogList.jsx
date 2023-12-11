@@ -1,5 +1,5 @@
 import icons from "../../../images/icons.svg";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { nanoid } from "nanoid";
 import {
@@ -21,21 +21,25 @@ import Loader from "../../UI/Loader";
 import handleIsFavorite from "../../../Helpers/handleIsFavorite";
 
 const CatalogList = () => {
+  const [limit, setLimit] = useState(12);
   const catalog = useSelector((state) => state.catalog.catalog);
   const loading = useSelector((state) => state.catalog.loading);
   const error = useSelector((state) => state.catalog.error);
   const favorites = useSelector((state) => state.favorites.favorites);
   const filteredCatalog = useSelector((state) => state.catalog.filteredCatalog);
-
   const dispatch = useDispatch();
-
+  const page = 1;
+  const searchParams = `page=${page}&limit=${limit}`;
   useEffect(() => {
-    dispatch(fetchCatalog());
-  }, [dispatch]);
+    dispatch(fetchCatalog(searchParams));
+  }, [dispatch, searchParams, limit]);
 
   const handleFavoriteClick = (item) => {
     const isFavorite = handleIsFavorite(favorites, item);
     isFavorite ? dispatch(removeFavorite(item)) : dispatch(addFavorite(item));
+  };
+  const loadMore = () => {
+    setLimit((prevLimit) => prevLimit + 12); // Increment limit by 12 when "Load more" button is clicked
   };
 
   return (
@@ -83,6 +87,11 @@ const CatalogList = () => {
             <Button>Learn more</Button>
           </ListItem>
         ))
+      )}
+      {catalog.length >= 25 ? null : (
+        <Button type="button" onClick={loadMore}>
+          Load more
+        </Button>
       )}
     </List>
   );

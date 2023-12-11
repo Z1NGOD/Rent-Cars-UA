@@ -3,10 +3,10 @@ import axios from "axios";
 
 export const fetchCatalog = createAsyncThunk(
   "catalog/fetchCatalog",
-  async (_, { rejectWithValue }) => {
+  async (params, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `https://6574de3ab2fbb8f6509cbc8a.mockapi.io/api/v1/catalog?`
+        `https://6574de3ab2fbb8f6509cbc8a.mockapi.io/api/v1/catalog?${params}`
       );
       if (!response.data.length) {
         throw new Error("No matches found");
@@ -39,7 +39,7 @@ const catalogSlice = createSlice({
   initialState: {
     catalog: [],
     catalogOne: {},
-    filteredCatalog:[],
+    filteredCatalog: [],
     loading: false,
     error: "",
   },
