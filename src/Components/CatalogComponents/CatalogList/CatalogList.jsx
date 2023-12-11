@@ -19,8 +19,12 @@ import { fetchCatalog } from "../../../Redux/catalogSlice";
 import { addFavorite, removeFavorite } from "../../../Redux/favoritesSlice";
 import Loader from "../../UI/Loader";
 import handleIsFavorite from "../../../Helpers/handleIsFavorite";
+import Modal from "../../UI/Modal/Modal.jsx";
+import LearnMoreContent from "./LearnMoreContent/LearnMoreContent.jsx";
 
 const CatalogList = () => {
+  const [showModal, setShowModal] = useState(false);
+  const [modalData, setModalData] = useState(null);
   const [limit, setLimit] = useState(12);
   const catalog = useSelector((state) => state.catalog.catalog);
   const loading = useSelector((state) => state.catalog.loading);
@@ -38,6 +42,7 @@ const CatalogList = () => {
     const isFavorite = handleIsFavorite(favorites, item);
     isFavorite ? dispatch(removeFavorite(item)) : dispatch(addFavorite(item));
   };
+
   return (
     <List>
       {error && <div>{error}</div>}
@@ -47,15 +52,8 @@ const CatalogList = () => {
         (filteredCatalog.length > 0 ? filteredCatalog : catalog).map((item) => (
           <ListItem key={nanoid()} id={item.id}>
             <Image src={item.img} />
-            <FavoriteBtn
-              type="button"
-              onClick={() => handleFavoriteClick(item)}
-            >
-              <FavoriteIcon
-                isFavorite={handleIsFavorite(favorites, item)}
-                width={18}
-                height={18}
-              >
+            <FavoriteBtn type="button" onClick={() => handleFavoriteClick(item)}>
+              <FavoriteIcon isFavorite={handleIsFavorite(favorites, item)} width={18} height={18}>
                 <use href={icons + "#heart"} />
               </FavoriteIcon>
             </FavoriteBtn>
@@ -80,18 +78,40 @@ const CatalogList = () => {
                   .join(" | ")}
               </Tag>
             </TagsList>
-            <Button>Learn more</Button>
+            <Button
+              type="button"
+              onClick={() => {
+                setModalData(item);
+                setShowModal(!showModal);
+              }}
+            >
+              Learn more
+            </Button>
           </ListItem>
         ))
       )}
-      {catalog.length < 25 && (
-        <Button
-          type="button"
-          onClick={() => setLimit((prevLimit) => prevLimit + 12)}
-        >
+      {catalog.length < 25 ? (
+        <Button type="button" onClick={() => setLimit((prevLimit) => prevLimit + 12)}>
           Load more
         </Button>
+      ) : null}
+      (
+      {showModal && (
+        <Modal
+          onClose={() => {
+            setShowModal(false);
+          }}
+          showModal={showModal}
+        >
+          <LearnMoreContent
+            data={modalData}
+            onCrossClick={() => {
+              setShowModal(false);
+            }}
+          />
+        </Modal>
       )}
+      )
     </List>
   );
 };
