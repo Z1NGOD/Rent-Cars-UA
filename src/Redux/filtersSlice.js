@@ -22,12 +22,18 @@ const initialState = {
   filters: [],
   loading: false,
   error: "",
+  searchFilters: {},
 };
 
 const filtersSlice = createSlice({
   name: "filters",
   initialState,
   reducers: {
+    setSearchFilters: (state, action) => {
+      state.loading = true;
+      state.searchFilters = action.payload;
+      state.loading = false;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -45,5 +51,5 @@ const filtersSlice = createSlice({
       });
   },
 });
-
+export const { setSearchFilters } = filtersSlice.actions;
 export default filtersSlice.reducer;

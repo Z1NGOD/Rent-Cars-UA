@@ -1,5 +1,5 @@
 import icons from "../../../images/icons.svg";
-import { useCallback, useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { nanoid } from "nanoid";
 import {
@@ -19,16 +19,18 @@ import { fetchCatalog } from "../../../Redux/catalogSlice";
 import { addFavorite, removeFavorite } from "../../../Redux/favoritesSlice";
 import Loader from "../../UI/Loader";
 import handleIsFavorite from "../../../Helpers/handleIsFavorite";
-import { useSearchParams } from "react-router-dom";
 
 const CatalogList = () => {
-  const { catalog, loading, error } = useSelector((state) => state.catalog);
+  const catalog = useSelector((state) => state.catalog.catalog);
+  const loading = useSelector((state) => state.catalog.loading);
+  const error = useSelector((state) => state.catalog.error);
   const favorites = useSelector((state) => state.favorites.favorites);
+  const filteredCatalog = useSelector((state) => state.catalog.filteredCatalog);
+
   const dispatch = useDispatch();
-  const params = useSearchParams();
 
   useEffect(() => {
-    dispatch(fetchCatalog(params));
+    dispatch(fetchCatalog());
   }, [dispatch]);
 
   const handleFavoriteClick = (item) => {
@@ -42,7 +44,7 @@ const CatalogList = () => {
       {loading ? (
         <Loader />
       ) : (
-        catalog.map((item) => (
+        (filteredCatalog.length > 0 ? filteredCatalog : catalog).map((item) => (
           <ListItem key={nanoid()} id={item.id}>
             <Image src={item.img} />
             <FavoriteBtn

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchFilters } from "../../../Redux/filtersSlice";
+import { fetchFilters, setSearchFilters } from "../../../Redux/filtersSlice";
 import { nanoid } from "nanoid";
 import icons from "../../../images/icons.svg";
 import {
@@ -18,7 +18,7 @@ import {
   InputElement,
   FormSubmitBtn,
 } from "./Filters.styled";
-import { useSearchParams } from "react-router-dom";
+import { setFilteredCatalog } from "../../../Redux/catalogSlice";
 
 const prices = [30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160];
 
@@ -29,10 +29,9 @@ const CatalogFilters = () => {
   const [isPriceDropDownOpen, setIsPriceDropDownOpen] = useState(false);
   const [formFromText, setFormFromText] = useState("");
   const [formToText, setFormToText] = useState("");
-  const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useDispatch();
   const { filters, loading: isLoading } = useSelector((state) => state.filters);
-
+  const { catalog } = useSelector((state) => state.catalog);
   const dropdownRef = useRef(null);
   useEffect(() => {
     dispatch(fetchFilters());
@@ -75,33 +74,47 @@ const CatalogFilters = () => {
       setFormToText(value);
     }
   };
+  const filterCatalog = (filters, items) => {
+    return items.filter((item) => {
+      return Object.entries(filters).every(([key, value]) => {
+        if (key === "make") {
+          return value ? item[key] === value : true;
+        } else if (key === "rentalPrice") {
+          const price = parseFloat(item[key].replace(/\D/g, ""));
+          return value ? price === parseFloat(value) : true;
+        } else if (key === "mileage") {
+          const { from, to } = value;
+          const mileage = parseInt(item[key]);
 
-  const buildSearchParams = () => {
-    const searchParams = {};
-
-    if (brandValue) {
-      searchParams.make = brandValue;
-    }
-
-    if (priceValue) {
-      searchParams.rentalPrice = priceValue;
-    }
-
-    if (formFromText && formToText) {
-      searchParams.mileageFrom = formFromText;
-      searchParams.mileageTo = formToText;
-    }
-
-    return new URLSearchParams(searchParams).toString();
+          if (from && to) {
+            return mileage >= parseInt(from) && mileage <= parseInt(to);
+          } else if (from) {
+            return mileage >= parseInt(from);
+          } else if (to) {
+            return mileage <= parseInt(to);
+          }
+          return true;
+        }
+        return true;
+      });
+    });
   };
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const filters = {
+      make: brandValue,
+      rentalPrice: priceValue,
+      mileage: {
+        from: formFromText,
+        to: formToText,
+      },
+    };
+    dispatch(setSearchFilters(filters));
 
-    const newSearchParams = buildSearchParams();
-
-    // Set the new search params directly
-    setSearchParams(newSearchParams);
+    const filteredItems = filterCatalog(filters, catalog);
+    dispatch(setFilteredCatalog(filteredItems));
 
     setBrandValue(null);
     setPriceValue(null);
