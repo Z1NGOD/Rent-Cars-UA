@@ -14,15 +14,15 @@ import {
   TagsList,
   Tag,
 } from "../../UI/ComponentList.styled.js";
-import { Button } from "../../UI/Button.styed";
-import { fetchCatalog } from "../../../Redux/catalogSlice";
-import { addFavorite, removeFavorite } from "../../../Redux/favoritesSlice";
-import Loader from "../../UI/Loader";
-import handleIsFavorite from "../../../Helpers/handleIsFavorite";
+import { Button } from "../../UI/Button.styed.js";
+import { fetchCatalog } from "../../../Redux/catalogSlice.js";
+import { addFavorite, removeFavorite } from "../../../Redux/favoritesSlice.js";
+import Loader from "../../UI/Loader.jsx";
+import handleIsFavorite from "../../../Helpers/handleIsFavorite.js";
 import Modal from "../../UI/Modal/Modal.jsx";
 import LearnMoreContent from "./LearnMoreContent/LearnMoreContent.jsx";
 
-const CatalogList = () => {
+const CList = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState(null);
   const [limit, setLimit] = useState(12);
@@ -125,4 +125,4 @@ const CatalogList = () => {
   );
 };
 
-export default CatalogList;
+export default CList;

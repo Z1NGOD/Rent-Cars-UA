@@ -1,5 +1,5 @@
 import CatalogFilters from "./Filters/Filters";
-import CatalogList from "./catalogList/catalogList";
+import CatalogList from "./CList/CList";
 
 const Catalog = () => {
   return (
