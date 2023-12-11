@@ -52,8 +52,15 @@ const CatalogList = () => {
         (filteredCatalog.length > 0 ? filteredCatalog : catalog).map((item) => (
           <ListItem key={nanoid()} id={item.id}>
             <Image src={item.img} />
-            <FavoriteBtn type="button" onClick={() => handleFavoriteClick(item)}>
-              <FavoriteIcon isFavorite={handleIsFavorite(favorites, item)} width={18} height={18}>
+            <FavoriteBtn
+              type="button"
+              onClick={() => handleFavoriteClick(item)}
+            >
+              <FavoriteIcon
+                isFavorite={handleIsFavorite(favorites, item)}
+                width={18}
+                height={18}
+              >
                 <use href={icons + "#heart"} />
               </FavoriteIcon>
             </FavoriteBtn>
@@ -90,12 +97,15 @@ const CatalogList = () => {
           </ListItem>
         ))
       )}
-      {catalog.length < 25 ? (
-        <Button type="button" onClick={() => setLimit((prevLimit) => prevLimit + 12)}>
+      {catalog.length > 25 ? null : (
+        <Button
+          type="button"
+          onClick={() => setLimit((prevLimit) => prevLimit + 12)}
+        >
           Load more
         </Button>
-      ) : null}
-      (
+      )}
+
       {showModal && (
         <Modal
           onClose={() => {
@@ -111,7 +121,6 @@ const CatalogList = () => {
           />
         </Modal>
       )}
-      )
     </List>
   );
 };
