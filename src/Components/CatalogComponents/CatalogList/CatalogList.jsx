@@ -38,10 +38,6 @@ const CatalogList = () => {
     const isFavorite = handleIsFavorite(favorites, item);
     isFavorite ? dispatch(removeFavorite(item)) : dispatch(addFavorite(item));
   };
-  const loadMore = () => {
-    setLimit((prevLimit) => prevLimit + 12); // Increment limit by 12 when "Load more" button is clicked
-  };
-
   return (
     <List>
       {error && <div>{error}</div>}
@@ -88,8 +84,11 @@ const CatalogList = () => {
           </ListItem>
         ))
       )}
-      {catalog.length >= 25 ? null : (
-        <Button type="button" onClick={loadMore}>
+      {catalog.length < 25 && (
+        <Button
+          type="button"
+          onClick={() => setLimit((prevLimit) => prevLimit + 12)}
+        >
           Load more
         </Button>
       )}
