@@ -3,19 +3,32 @@ import styled from "@emotion/styled";
 const FormContainer = styled.div`
   display: flex;
   align-items: flex-end;
+  gap: 18px;
 
   margin: 0 auto;
   width: 859px;
   height: 74px;
 `;
 
-const SelectCarBrandContainer = styled.div`
+const FormElementContainer = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
   gap: 8px;
 
-  width: 224px;
+  width: ${(props) => {
+    switch (props.selectType) {
+      case "brand":
+        return "224px";
+      case "price":
+        return "125px";
+      case "input":
+        return "474px";
+
+      default:
+        break;
+    }
+  }};
   height: 74px;
 `;
 
@@ -32,9 +45,10 @@ const SelectBtn = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 32px;
 
-  width: 224px;
+  width: ${(props) => {
+    return props.selectType === "brand" ? "224px" : "125px";
+  }};
   height: 48px;
   padding: 0 18px;
 
@@ -80,7 +94,9 @@ const SelectContent = styled.div`
 
   display: flex;
 
-  width: 100%;
+  width: ${(props) => {
+    return props.selectType === "brand" ? "224px" : "125px";
+  }};
 `;
 
 const SelectOptions = styled.ul`
@@ -89,7 +105,9 @@ const SelectOptions = styled.ul`
   gap: 8px;
 
   width: 100%;
-  height: 272px;
+  height: ${(props) => {
+    return props.selectType === "brand" ? "272px" : "188px";
+  }};
   padding: 14px 8px 14px 18px;
 
   border-radius: 14px;
@@ -103,6 +121,7 @@ const SelectOptions = styled.ul`
   opacity: ${(props) => {
     return props.isBrandDropDownOpen ? "1" : "0";
   }};
+
   pointer-events: ${(props) => {
     return props.isBrandDropDownOpen ? "all" : "none";
   }};
@@ -128,9 +147,92 @@ const SelectOptionsItem = styled.li`
   }
 `;
 
+const FormWrapper = styled.form`
+  position: relative;
+  display: flex;
+
+  width: 474px;
+  height: 48px;
+`;
+
+const InputText = styled.span`
+  position: absolute;
+
+  color: #121417;
+  font-family: Manrope;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+
+  pointer-events: none;
+
+  &:nth-last-of-type(1) {
+    top: 14px;
+    left: 24px;
+  }
+  &:nth-last-of-type(2) {
+    top: 14px;
+    left: 184px;
+  }
+`;
+
+const InputElement = styled.input`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 160px;
+  height: 48px;
+
+  border: none;
+  outline: none;
+  border-radius: 14px 0px 0px 14px;
+  border-right: 1px solid rgba(138, 138, 137, 0.2);
+  background: #f7f7fb;
+  padding-left: 68px;
+
+  color: #121417;
+  font-family: Manrope;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+
+  &:nth-last-of-type(1) {
+    border-radius: 0px 14px 14px 0px;
+    border-right: none;
+    margin-right: 1px;
+    padding-left: 48px;
+  }
+`;
+
+const FormSubmitBtn = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 136px;
+  height: 48px;
+  margin-left: 18px;
+  border-radius: 12px;
+  background: #3470ff;
+  border: none;
+  outline: none;
+
+  color: #fff;
+  font-family: Manrope;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+
+  cursor: pointer;
+`;
+
 export {
   FormContainer,
-  SelectCarBrandContainer,
+  FormElementContainer,
   SelectBtnTitle,
   SelectBtn,
   SelectBtnText,
@@ -138,4 +240,8 @@ export {
   SelectContent,
   SelectOptions,
   SelectOptionsItem,
+  FormWrapper,
+  InputText,
+  InputElement,
+  FormSubmitBtn,
 };
