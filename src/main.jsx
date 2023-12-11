@@ -11,7 +11,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <BrowserRouter basename="https://z1ngod.github.io/">
+        <BrowserRouter basename="https://z1ngod.github.io/Rent-Cars-UA/">
           <App />
         </BrowserRouter>
       </PersistGate>
