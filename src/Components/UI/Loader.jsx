@@ -7,7 +7,7 @@ const Loader = () => {
       width={80}
       color="#0B44CD"
       wrapperStyle={{}}
-      wrapperClass=""
+      wrapperClass="loader"
       visible={true}
       ariaLabel="oval-loading"
       secondaryColor="#3470FF"

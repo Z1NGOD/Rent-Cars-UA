@@ -1,10 +1,10 @@
-import CatalogFilters from "./catalogFilters/catalogFilters";
+import Filters from "./Filters/Filters";
 import CatalogList from "./catalogList/catalogList";
 
 const Catalog = () => {
   return (
     <>
-      <CatalogFilters />
+      <Filters />
       <CatalogList />
     </>
   );
