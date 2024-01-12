@@ -1,21 +1,21 @@
-import icons from "../../images/icons.svg";
-import { useDispatch, useSelector } from "react-redux";
 import { nanoid } from "nanoid";
+import { useDispatch, useSelector } from "react-redux";
+import handleIsFavorite from "../../Helpers/handleIsFavorite";
+import { addFavorite, removeFavorite } from "../../Redux/favoritesSlice";
+import icons from "../../images/icons.svg";
+import { Button } from "../UI/Button.styed";
 import {
-  List,
-  ListItem,
-  Image,
   FavoriteBtn,
   FavoriteIcon,
-  TitleContainer,
-  Title,
-  TitleSpan,
-  TagsList,
+  Image,
+  List,
+  ListItem,
   Tag,
+  TagsList,
+  Title,
+  TitleContainer,
+  TitleSpan,
 } from "../UI/ComponentList.styled.js";
-import { Button } from "../UI/Button.styed";
-import { addFavorite, removeFavorite } from "../../Redux/favoritesSlice";
-import handleIsFavorite from "../../Helpers/handleIsFavorite";
 
 const Favorite = () => {
   const favorites = useSelector((state) => state.favorites.favorites);

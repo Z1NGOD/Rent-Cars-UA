@@ -1,24 +1,24 @@
-import { useState, useEffect, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchFilters, setSearchFilters } from "../../../Redux/filtersSlice";
 import { nanoid } from "nanoid";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setFilteredCatalog } from "../../../Redux/catalogSlice";
+import { fetchFilters, setSearchFilters } from "../../../Redux/filtersSlice";
 import icons from "../../../images/icons.svg";
 import {
   FormContainer,
   FormElementContainer,
-  SelectBtnTitle,
+  FormSubmitBtn,
+  FormWrapper,
+  InputElement,
+  InputText,
   SelectBtn,
-  SelectBtnText,
   SelectBtnIcon,
+  SelectBtnText,
+  SelectBtnTitle,
   SelectContent,
   SelectOptions,
   SelectOptionsItem,
-  FormWrapper,
-  InputText,
-  InputElement,
-  FormSubmitBtn,
 } from "./Filters.styled";
-import { setFilteredCatalog } from "../../../Redux/catalogSlice";
 
 const prices = [30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160];
 
@@ -99,7 +99,6 @@ const CatalogFilters = () => {
       });
     });
   };
-
 
   const handleSubmit = (e) => {
     e.preventDefault();

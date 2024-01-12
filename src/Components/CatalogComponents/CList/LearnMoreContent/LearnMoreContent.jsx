@@ -1,19 +1,19 @@
 import { nanoid } from "nanoid";
 import icons from "../../../../images/icons.svg";
 import {
-  LearnMoreWrapper,
-  ExitBtn,
-  CarImageWrapper,
-  CarTitle,
-  CarDesc,
-  CarAccessoriesTitle,
   CarAccessories,
-  CarConditionsTitle,
-  CarConditionsWrapper,
+  CarAccessoriesTitle,
   CarCondition,
   CarConditionText,
   CarConditionTextSpan,
+  CarConditionsTitle,
+  CarConditionsWrapper,
+  CarDesc,
+  CarImageWrapper,
+  CarTitle,
   ContactBtn,
+  ExitBtn,
+  LearnMoreWrapper,
 } from "./LearnMoreContent.styled";
 
 const LearnMoreContent = (data) => {
@@ -28,19 +28,25 @@ const LearnMoreContent = (data) => {
       <CarImageWrapper imgLink={item.img} />
 
       <CarTitle>
-        {item.make} <span style={{ color: "#3470FF" }}>{item.model}</span> {item.year}
+        {item.make} <span style={{ color: "#3470FF" }}>{item.model}</span>{" "}
+        {item.year}
       </CarTitle>
 
       <CarAccessories>
-        {item.address.split(",").splice(1, 2).join(" | ")} | id: {item.id} | Year: {item.year} | Type: {item.type} | Fuel
-        Consumption: {item.fuelConsumption} | Engine Size: {item.engineSize}
+        {item.address.split(",").splice(1, 2).join(" | ")} | id: {item.id} |
+        Year: {item.year} | Type: {item.type} | Fuel Consumption:{" "}
+        {item.fuelConsumption} | Engine Size: {item.engineSize}
       </CarAccessories>
 
       <CarDesc>{item.description}</CarDesc>
 
-      <CarAccessoriesTitle>Accessories and functionalities:</CarAccessoriesTitle>
+      <CarAccessoriesTitle>
+        Accessories and functionalities:
+      </CarAccessoriesTitle>
 
-      <CarAccessories>{item.accessories.concat(item.functionalities).join(" | ")}</CarAccessories>
+      <CarAccessories>
+        {item.accessories.concat(item.functionalities).join(" | ")}
+      </CarAccessories>
 
       <CarConditionsTitle>Rental Conditions:</CarConditionsTitle>
 
@@ -50,7 +56,10 @@ const LearnMoreContent = (data) => {
             {condition.split(" ").map((cond) => {
               if (Number(cond)) {
                 return (
-                  <CarConditionTextSpan key={nanoid()} style={{ color: "#3470FF" }}>
+                  <CarConditionTextSpan
+                    key={nanoid()}
+                    style={{ color: "#3470FF" }}
+                  >
                     {cond}
                   </CarConditionTextSpan>
                 );

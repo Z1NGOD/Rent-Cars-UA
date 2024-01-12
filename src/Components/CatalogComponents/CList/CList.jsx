@@ -1,24 +1,24 @@
-import icons from "../../../images/icons.svg";
+import { nanoid } from "nanoid";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { nanoid } from "nanoid";
-import {
-  List,
-  ListItem,
-  Image,
-  FavoriteBtn,
-  FavoriteIcon,
-  TitleContainer,
-  Title,
-  TitleSpan,
-  TagsList,
-  Tag,
-} from "../../UI/ComponentList.styled.js";
-import { Button } from "../../UI/Button.styed.js";
+import handleIsFavorite from "../../../Helpers/handleIsFavorite.js";
 import { fetchCatalog } from "../../../Redux/catalogSlice.js";
 import { addFavorite, removeFavorite } from "../../../Redux/favoritesSlice.js";
+import icons from "../../../images/icons.svg";
+import { Button } from "../../UI/Button.styed.js";
+import {
+  FavoriteBtn,
+  FavoriteIcon,
+  Image,
+  List,
+  ListItem,
+  Tag,
+  TagsList,
+  Title,
+  TitleContainer,
+  TitleSpan,
+} from "../../UI/ComponentList.styled.js";
 import Loader from "../../UI/Loader.jsx";
-import handleIsFavorite from "../../../Helpers/handleIsFavorite.js";
 import Modal from "../../UI/Modal/Modal.jsx";
 import LearnMoreContent from "./LearnMoreContent/LearnMoreContent.jsx";
 
