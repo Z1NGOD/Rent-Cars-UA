@@ -1,8 +1,5 @@
 import { nanoid } from "nanoid";
 import { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setFilteredCatalog } from "../../../Redux/catalogSlice";
-import { fetchFilters, setSearchFilters } from "../../../Redux/filtersSlice";
 import icons from "../../../images/icons.svg";
 import {
   FormContainer,
@@ -20,8 +17,8 @@ import {
   SelectOptionsItem,
 } from "./Filters.styled";
 
-const prices = [30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160];
-
+import { prices, filters } from "./filtersValues";
+import { useSearchParams } from "react-router-dom";
 const CatalogFilters = () => {
   const [brandValue, setBrandValue] = useState(null);
   const [isBrandDropDownOpen, setIsBrandDropDownOpen] = useState(false);
@@ -29,13 +26,9 @@ const CatalogFilters = () => {
   const [isPriceDropDownOpen, setIsPriceDropDownOpen] = useState(false);
   const [formFromText, setFormFromText] = useState("");
   const [formToText, setFormToText] = useState("");
-  const dispatch = useDispatch();
-  const { filters, loading: isLoading } = useSelector((state) => state.filters);
-  const { catalog } = useSelector((state) => state.catalog);
   const dropdownRef = useRef(null);
+  const [_, setSearchParams] = useSearchParams();
   useEffect(() => {
-    dispatch(fetchFilters());
-
     const handleClickOutside = (event) => {
       if (
         dropdownRef.current &&
@@ -63,7 +56,7 @@ const CatalogFilters = () => {
       document.removeEventListener("click", handleClickOutside);
       document.removeEventListener("click", handleClickOutside2);
     };
-  }, [dispatch]);
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.currentTarget;
@@ -74,46 +67,18 @@ const CatalogFilters = () => {
       setFormToText(value);
     }
   };
-  const filterCatalog = (filters, items) => {
-    return items.filter((item) => {
-      return Object.entries(filters).every(([key, value]) => {
-        if (key === "make") {
-          return value ? item[key] === value : true;
-        } else if (key === "rentalPrice") {
-          const price = parseFloat(item[key].replace(/\D/g, ""));
-          return value ? price === parseFloat(value) : true;
-        } else if (key === "mileage") {
-          const { from, to } = value;
-          const mileage = parseInt(item[key]);
-
-          if (from && to) {
-            return mileage >= parseInt(from) && mileage <= parseInt(to);
-          } else if (from) {
-            return mileage >= parseInt(from);
-          } else if (to) {
-            return mileage <= parseInt(to);
-          }
-          return true;
-        }
-        return true;
-      });
-    });
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const filters = {
-      make: brandValue,
-      rentalPrice: priceValue,
-      mileage: {
-        from: formFromText,
-        to: formToText,
-      },
-    };
-    dispatch(setSearchFilters(filters));
 
-    const filteredItems = filterCatalog(filters, catalog);
-    dispatch(setFilteredCatalog(filteredItems));
+    const params = {};
+
+    if (brandValue) params.brand = brandValue;
+    if (priceValue) params.rentalPrice = priceValue;
+    if (formFromText !== "") params.from = formFromText;
+    if (formToText !== "") params.to = formToText;
+
+    setSearchParams(Object.keys(params).length > 0 ? params : {});
 
     setBrandValue(null);
     setPriceValue(null);
@@ -123,9 +88,7 @@ const CatalogFilters = () => {
 
   return (
     <>
-      {isLoading ? (
-        <></>
-      ) : (
+      {
         <FormContainer onSubmit={handleSubmit}>
           <FormElementContainer selectType={"brand"}>
             <SelectBtnTitle>Car brand</SelectBtnTitle>
@@ -212,7 +175,7 @@ const CatalogFilters = () => {
           </FormElementContainer>
 
           <FormElementContainer selectType={"input"}>
-            <SelectBtnTitle>Сar mileage / km</SelectBtnTitle>
+            <SelectBtnTitle>Car mileage / km</SelectBtnTitle>
             <FormWrapper>
               <InputText>To</InputText>
               <InputText>From</InputText>
@@ -232,7 +195,7 @@ const CatalogFilters = () => {
             </FormWrapper>
           </FormElementContainer>
         </FormContainer>
-      )}
+      }
     </>
   );
 };

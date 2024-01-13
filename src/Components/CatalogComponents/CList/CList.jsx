@@ -1,8 +1,7 @@
 import { nanoid } from "nanoid";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import handleIsFavorite from "../../../Helpers/handleIsFavorite.js";
-import { fetchCatalog } from "../../../Redux/catalogSlice.js";
 import { addFavorite, removeFavorite } from "../../../Redux/favoritesSlice.js";
 import icons from "../../../images/icons.svg";
 import { Button } from "../../UI/Button.styed.js";
@@ -21,35 +20,60 @@ import {
 import Loader from "../../UI/Loader.jsx";
 import Modal from "../../UI/Modal/Modal.jsx";
 import LearnMoreContent from "./LearnMoreContent/LearnMoreContent.jsx";
+import { useGetCarsQuery } from "../../../Redux/API/RTK.js";
+import { useSearchParams } from "react-router-dom";
 
 const CList = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState(null);
-  const [limit, setLimit] = useState(12);
-  const catalog = useSelector((state) => state.catalog.catalog);
-  const loading = useSelector((state) => state.catalog.loading);
-  const error = useSelector((state) => state.catalog.error);
   const favorites = useSelector((state) => state.favorites.favorites);
-  const filteredCatalog = useSelector((state) => state.catalog.filteredCatalog);
   const dispatch = useDispatch();
-  const page = 1;
-  const searchParams = `page=${page}&limit=${limit}`;
-  useEffect(() => {
-    dispatch(fetchCatalog(searchParams));
-  }, [dispatch, searchParams, limit]);
+
+  const [searchParams] = useSearchParams();
+  const searchParamsObject = Object.fromEntries(searchParams.entries());
+
+  const [limit, setLimit] = useState(12);
+  const { data, error, isLoading } = useGetCarsQuery({
+    params: {
+      ...searchParamsObject,
+      limit,
+    },
+  });
 
   const handleFavoriteClick = (item) => {
     const isFavorite = handleIsFavorite(favorites, item);
     isFavorite ? dispatch(removeFavorite(item)) : dispatch(addFavorite(item));
   };
 
+  const tagsList = ({
+    address,
+    rentalCompany,
+    accessories,
+    type,
+    model,
+    id,
+    functionalities,
+  }) => {
+    return [
+      address.split(",").splice(1, 2).join(" | "),
+      rentalCompany,
+      accessories[2],
+      type,
+      model,
+      id,
+      functionalities[0],
+    ]
+      .filter((tag) => !!tag)
+      .join(" | ");
+  };
+
   return (
     <List>
       {error && <div>{error}</div>}
-      {loading ? (
+      {isLoading ? (
         <Loader />
       ) : (
-        (filteredCatalog.length > 0 ? filteredCatalog : catalog).map((item) => (
+        data.cars.map((item) => (
           <ListItem key={nanoid()} id={item.id}>
             <Image src={item.img} />
             <FavoriteBtn
@@ -71,19 +95,7 @@ const CList = () => {
               <Title>{item.rentalPrice}</Title>
             </TitleContainer>
             <TagsList>
-              <Tag>
-                {[
-                  item.address.split(",").splice(1, 2).join(" | "),
-                  item.rentalCompany,
-                  item.accessories[2],
-                  item.type,
-                  item.model,
-                  item.id,
-                  item.functionalities[0],
-                ]
-                  .filter((tag) => !!tag)
-                  .join(" | ")}
-              </Tag>
+              <Tag>{tagsList(item)}</Tag>
             </TagsList>
             <Button
               type="button"
@@ -97,7 +109,7 @@ const CList = () => {
           </ListItem>
         ))
       )}
-      {catalog.length > 25 ? null : (
+      {data?.totalCount > limit && (
         <Button
           type="button"
           onClick={() => setLimit((prevLimit) => prevLimit + 12)}

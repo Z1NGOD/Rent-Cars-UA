@@ -19,6 +19,31 @@ import {
 const LearnMoreContent = (data) => {
   const item = data.data;
 
+  // нам приходять дані розділені спецсимволом \n тому ми видаляємо його
+  const fixedItemConditions = item.rentalConditions.split("\n");
+
+  // тут ми приймаємо condition та перевіряємо наявність у нього числового значення, 
+  // якщо воно є то виділяємо його кольором
+  const conditionElementSpanDecorator = (condition) => {
+    if (Number(condition)) {
+      return (
+        <CarConditionTextSpan key={nanoid()} style={{ color: "#3470FF" }}>
+          {condition}
+        </CarConditionTextSpan>
+      );
+    }
+
+    return <CarConditionText key={nanoid()}>{condition}</CarConditionText>;
+  };
+
+  // тут ми беремо масив conditions та на кожен кондишн створюємо елемент який проганяємо через декоратор
+  // числового значення нашого кондишина
+  const carConditions = fixedItemConditions.map((condition) => (
+    <CarCondition key={nanoid()}>
+      {condition.split(" ").map(conditionElementSpanDecorator)}
+    </CarCondition>
+  ));
+
   return (
     <LearnMoreWrapper>
       <ExitBtn onClick={data.onCrossClick}>
@@ -51,23 +76,7 @@ const LearnMoreContent = (data) => {
       <CarConditionsTitle>Rental Conditions:</CarConditionsTitle>
 
       <CarConditionsWrapper>
-        {item.rentalConditions.split("\n").map((condition) => (
-          <CarCondition key={nanoid()}>
-            {condition.split(" ").map((cond) => {
-              if (Number(cond)) {
-                return (
-                  <CarConditionTextSpan
-                    key={nanoid()}
-                    style={{ color: "#3470FF" }}
-                  >
-                    {cond}
-                  </CarConditionTextSpan>
-                );
-              }
-              return <CarConditionText key={nanoid()}>{cond}</CarConditionText>;
-            })}
-          </CarCondition>
-        ))}
+        {carConditions}
         <CarCondition>
           Mileage: <CarConditionTextSpan>{item.mileage}</CarConditionTextSpan>
         </CarCondition>

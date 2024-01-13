@@ -9,10 +9,9 @@ import {
   PURGE,
   REGISTER,
 } from "redux-persist";
-import catalogSlice from "./catalogSlice";
 import favoritesSlice from "./favoritesSlice";
-import filtersSlice from "./filtersSlice";
 import storage from "redux-persist/lib/storage";
+import { API } from "./API/RTK";
 
 const persistConfig = {
   key: "store",
@@ -20,18 +19,16 @@ const persistConfig = {
   whitelist: ["favorites"],
 };
 
-
 export const store = configureStore({
   reducer: {
-    catalog: catalogSlice,
+    [API.reducerPath]: API.reducer,
     favorites: persistReducer(persistConfig, favoritesSlice),
-    filters: filtersSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(),
+    }).concat(API.middleware),
 });
 export const persistor = persistStore(store);
