@@ -1,0 +1,26 @@
+const prices = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
+const filters = [
+  "Buick",
+  "Volvo",
+  "HUMMER",
+  "Subaru",
+  "Mitsubishi",
+  "Nissan",
+  "Lincoln",
+  "GMC",
+  "Hyundai",
+  "MINI",
+  "Bentley",
+  "Mercedes-Benz",
+  "Aston Martin",
+  "Pontiac",
+  "Lamborghini",
+  "Audi",
+  "BMW",
+  "Chevrolet",
+  "Mercedes-Benz",
+  "Chrysler",
+  "Kia",
+  "Land",
+];
+export { prices, filters };
